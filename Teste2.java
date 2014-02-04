@@ -3,7 +3,7 @@ package projeto2;
 public class Teste2 {
 	
 	public static void main(String [] args){
-		System.out.println("Será q pegou??");
+		System.out.println("Pegou!!!!");
 	}
 
 }
