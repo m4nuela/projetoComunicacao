@@ -26,7 +26,6 @@ public class Core {
 
 	public Core(){
 		this.listaSalas = new ArrayList<Sala>();
-
 		this.listaUsuarios = new ArrayList<Usuario>();
 		this.protocolo = new TCPCliente(4035);
 	}
@@ -61,8 +60,6 @@ public class Core {
 			listaUsuarios.add(user);
 		}
 	}
-
-
 
 
 
@@ -123,16 +120,14 @@ public class Core {
 
 
 
-
-
-
-
-
 	public ArrayList<Usuario> mostrarListaUsuariosOnline(){
 
 	}
-
-	public void criarSala(String nome, String id, boolean protegida, String senha) throws SalaJaExistenteException {
+	
+	
+///////////////////////////////////////CRIAR SALA//////////////////////////////////////////
+	public void criarSala(String nome, String id, boolean protegida, String senha, ArrayList<Usuario> lista, Usuario dono) throws SalaJaExistenteException {
+		/* toda sala tem que ter a lista de usuarios, e o dono(a pessoa que criou) da sala*/
 		boolean existe = false;
 
 		while(existe == false && i<listaSalas.size()){ // Vejo se já existe alguma sala com o mesmo id ou mesmo nome ja cadastrada
@@ -149,16 +144,13 @@ public class Core {
 		sala.setId(id);
 		sala.setProtegida(protegida);
 		sala.setSenha(senha);
-		
-		if((sala.getNome()).equals(null) || (sala.getSenha()).equals(null) || (sala.getId()) == '/n'  || (user.getAvatar()).equals(null)){
+
+		if((sala.getNome()).equals(null) || (sala.getSenha()).equals(null) || (sala.getId()).equals(null)){
 			throw new CampoObrigatorioException();
 		}else{
-
-			user = new Usuario(nome,login,senha,email,avatar);
-
-			listaUsuarios.add(user);
+			sala = new Sala(lista, id,  nome, protegida, senha, dono);
+			listaSalas.add(sala);
 		}		
-
 	}
 
 	public void atualizarSala(){
@@ -167,6 +159,7 @@ public class Core {
 
 
 	public ArrayList<Sala> mostrarListaSalas(){
+		
 
 
 	}

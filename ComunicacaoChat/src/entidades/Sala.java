@@ -11,16 +11,18 @@ public class Sala implements Serializable{
 	String id;
 	boolean protegida;
 	String senha;
-	ArrayList<Usuario> lista; 
+	ArrayList<Usuario> lista;
+	Usuario dono;
 	
-	public Sala(ArrayList<Usuario> lista, String id, String nome, boolean protegida, String senha){
+	public Sala(ArrayList<Usuario> lista, String id, String nome, boolean protegida, String senha, Usuario dono){
 		this.nome = nome;
 		this.id = id;
 		this.lista = lista;
 		this.protegida = protegida;
 		this.senha = senha;		
+		this.dono = dono;
 	}
-	
+		
 
 	public ArrayList<Usuario> getLista() {
 		return lista;
@@ -64,6 +66,16 @@ public class Sala implements Serializable{
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+
+	public Usuario getDono() {
+		return dono;
+	}
+
+
+	public void setDono(Usuario dono) {
+		this.dono = dono;
 	}
 	
 	
