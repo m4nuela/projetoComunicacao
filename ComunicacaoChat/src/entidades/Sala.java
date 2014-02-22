@@ -8,12 +8,12 @@ import entidades.Usuario;
 
 public class Sala implements Serializable{
 	String nome;
-	int id;
+	String id;
 	boolean protegida;
 	String senha;
 	ArrayList<Usuario> lista; 
 	
-	public Sala(ArrayList<Usuario> lista,int id, String nome, boolean protegida, String senha){
+	public Sala(ArrayList<Usuario> lista, String id, String nome, boolean protegida, String senha){
 		this.nome = nome;
 		this.id = id;
 		this.lista = lista;
@@ -56,6 +56,19 @@ public class Sala implements Serializable{
 		this.senha = senha;
 	}
 
+
+	public String getId() {
+		return id;
+	}
+
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	
+	
+	
 	
 	 	
 }
