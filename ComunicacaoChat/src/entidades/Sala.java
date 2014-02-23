@@ -9,7 +9,7 @@ import entidades.Usuario;
 
 public class Sala implements Serializable{
 	String nome;
-	String id;
+	int id;
 	boolean protegida;
 	String senha;
 	ArrayList<Usuario> lista;
@@ -18,7 +18,7 @@ public class Sala implements Serializable{
 	
 	public Sala(ArrayList<Usuario> lista, String nome, boolean protegida, String senha, Usuario dono, File file){
 		this.nome = nome;
-		this.id = Math.random(); /// math.random 
+		this.id = (int) (Math.random()*100); /// math.random 
 		this.lista = lista;
 		this.protegida = protegida;
 		this.senha = senha;		
@@ -72,12 +72,12 @@ public class Sala implements Serializable{
 	}
 
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
