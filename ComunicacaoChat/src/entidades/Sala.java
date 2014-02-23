@@ -1,5 +1,6 @@
 package entidades;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -13,16 +14,28 @@ public class Sala implements Serializable{
 	String senha;
 	ArrayList<Usuario> lista;
 	Usuario dono;
+	File conversa;
 	
-	public Sala(ArrayList<Usuario> lista, String id, String nome, boolean protegida, String senha, Usuario dono){
+	public Sala(ArrayList<Usuario> lista, String nome, boolean protegida, String senha, Usuario dono, File file){
 		this.nome = nome;
-		this.id = id;
+		this.id = Math.random(); /// math.random 
 		this.lista = lista;
 		this.protegida = protegida;
 		this.senha = senha;		
 		this.dono = dono;
+		this.conversa = file;
 	}
 		
+
+	public File getConversa() {
+		return conversa;
+	}
+
+
+	public void setConversa(File conversa) {
+		this.conversa = conversa;
+	}
+
 
 	public ArrayList<Usuario> getLista() {
 		return lista;
