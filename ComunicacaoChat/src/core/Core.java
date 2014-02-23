@@ -26,12 +26,13 @@ import exceptions.UsuarioInexistenteException;
 public class Core {
 	ArrayList<Sala> listaSalas;
 	ArrayList<Usuario> listaUsuarios;
+	ArrayList<Usuario> listaUsuariosOnline;
 	CamadaTransporte protocolo;
-	Usuario user;
-	Sala sala;
+	Usuario user = new Usuario(null, null, null, null, null);
+	Sala sala = new Sala(null, false, null, user);
 	boolean existe;
 	boolean logado;
-	int i=0;
+	int i;
 	FileOutputStream fosU;
 	ObjectOutputStream oosU;
 	FileOutputStream fosS;
@@ -51,7 +52,7 @@ public class Core {
 	}
 
 
-	///////////////////////////////////INICIALIZAR_LISTAS///////////////////////////////////////////////////
+	///////////////////////////////////INICIALIZAR_LISTAS//////////////////////////////////////////////////////////////////////////////////////////
 	public void inicializarListas() throws IOException, FileNotFoundException, ClassNotFoundException{
 
 
@@ -89,12 +90,13 @@ public class Core {
 
 
 
-	///////////////////////////////////CADASTRAR_USUARIO////////////////////////////////////////////////////
+	///////////////////////////////////CADASTRAR_USUARIO//////////////////////////////////////////////////////////////////////////////////////////////////////
 	public void cadastrarUsuario(String nome,String login, String senha,String email, JLabel avatar) throws LoginJaExistenteException, CampoObrigatorioException, IOException, FileNotFoundException, ClassNotFoundException{
 		existe = false;
+		i=0;
 
 		while(existe == false && i<listaUsuarios.size()){ // Vejo se já existe alguem com o mesmo login ja cadastrado
-			if (listaUsuarios.get(i).getLogin() == login){
+			if (listaUsuarios.get(i).getLogin().equalsIgnoreCase(login)){
 				existe=true;
 				throw new LoginJaExistenteException(login); // na GUI é que eu a trato
 			}else{
@@ -102,6 +104,10 @@ public class Core {
 			}
 
 		}
+		
+		if(nome.equals(null) || login.equals(null) || senha.equals(null) || email.equals(null) || avatar.equals(null) ){
+			throw new CampoObrigatorioException();
+		}else{
 
 		user.setNome(nome);
 		user.setLogin(login);
@@ -109,11 +115,7 @@ public class Core {
 		user.setEmail(email);
 		user.setAvatar(avatar);
 
-		if((user.getNome()).equals(null) || (user.getLogin()).equals(null) || (user.getSenha()).equals(null) || (user.getEmail()).equals(null) || (user.getAvatar()).equals(null)){
-			throw new CampoObrigatorioException();
-		}else{
-
-			user = new Usuario(nome,login,senha,email,avatar);
+		
 
 			listaUsuarios.add(user); // adiciono à lista 
 
@@ -131,7 +133,7 @@ public class Core {
 
 
 
-	/////////////////////////////////////////ATUALIZAR_USUARIO//////////////////////////////////////////
+	/////////////////////////////////////////ATUALIZAR_USUARIO////////////////////////////////////////////////////////////////////////////////////////
 	public void atualizarUsuario(String nome,String login, String senha,String email, JLabel avatar) throws IOException{
 		existe = false;
 		logado = false;
@@ -177,7 +179,7 @@ public class Core {
 
 
 
-	/////////////////////////////////////////LOGIN///////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////LOGIN/////////////////////////////////////////////////////////////////////////////////////////////////
 	public void fazerLoginUsuario(String login, String senha) throws UsuarioInexistenteException, SenhaIncorretaException{
 		existe = false;
 		while(existe == false && i<listaUsuarios.size()){ // Vejo se já existe alguem com o mesmo login ja cadastrado
@@ -209,25 +211,29 @@ public class Core {
 
 
 
-
+//////////////////////////////////////////MOSTRAR_LISTA_USUARIOS_ONLINE///////////////////////////////////////////////////////////////////////////
 	public ArrayList<Usuario> mostrarListaUsuariosOnline() throws IOException, ClassNotFoundException {
 
 		ArrayList<Usuario> retorno = new ArrayList<Usuario>();
-		fisU = new FileInputStream("arquivosUsuarios");
-		oisU = new ObjectInputStream(fisU);
-
-		// recupera o objeto
-		user = (Usuario) oisU.readObject();
-		oisU.close();
-		retorno.add(user);
+		for(int i=0; i<listaUsuarios.size();i++){
+			if(listaUsuarios.get(i).getStatus() == true){
+				retorno.add(listaUsuarios.get(i));
+			}
+		}
+		
 		return retorno;
 	}
 
 
+	
+	
 
-	public void criarSala(String nome, String id, boolean protegida, String senha, ArrayList<Usuario> lista, Usuario dono, File file) throws SalaJaExistenteException, CampoObrigatorioException {
-		/* toda sala tem que ter a lista de usuarios, e o dono(a pessoa que criou) da sala*/
+	
+///////////////////////////////////////////////////////CRIAR_SALA///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public void criarSala(String nome, boolean protegida, String senha, Usuario dono) throws SalaJaExistenteException, CampoObrigatorioException {
+		/* toda sala tem que ter a lista de usuarios, e o dono(a pessoa que criou) a sala*/
 		boolean existe = false;
+		i=0;
 
 		while(existe == false && i<listaSalas.size()){ // Vejo se já existe alguma sala com o mesmo id ou mesmo nome ja cadastrada
 			if (listaSalas.get(i).getNome().equalsIgnoreCase(nome)){
@@ -238,33 +244,84 @@ public class Core {
 			}
 
 		}
+		
+
+		if(nome.equals(null) || senha.equals(null)){
+			throw new CampoObrigatorioException();
+		}else{
 
 		sala.setNome(nome);
 		sala.setProtegida(protegida);
 		sala.setSenha(senha);
-
-		if((sala.getNome()).equals(null) || (sala.getSenha()).equals(null)){
-			throw new CampoObrigatorioException();
-		}else{
-			sala = new Sala(lista,  nome, protegida, senha, dono, file);
+		sala.setDono(dono);
+		
+		sala.getListaUsuarios().add(dono);
+		
 			listaSalas.add(sala);
 		}		
 	}
 
 
+////////////////////////////////////////////////////////ATUALIZAR_SALA///////////////////////////////////////////////////////////////////
+	public void atualizarSala(String nome, boolean protegida,String senha) throws IOException{
+		
+		existe = false;
 
-	public void atualizarSala(){
+		while(existe == false && i<listaSalas.size()){ // Vejo se existe alguem com o mesmo login ja cadastrado
+			if ((listaSalas.get(i).getNome()).equalsIgnoreCase(nome)){
+				existe=true;
+				sala= listaSalas.get(i);
+
+			}else{
+				i++;
+			}
+
+		}
+		if(existe){
+			sala.setNome(nome);
+			sala.setProtegida(protegida);
+			sala.setSenha(senha);
+
+			listaSalas.set(i, sala); // depois de atualizar o dado na lista e tenho  q atualizar no arquivo!
+
+			fosS = new FileOutputStream("arquivoSalas.txt",false); // sobreescrever o arquivo com o obj.
+			oosS = new ObjectOutputStream(fosS);
+			oosS.writeObject(listaSalas.get(0)); // pega o primeiro obj. da lista
+			oosS.close();
+			// salva o objeto
+
+
+
+			fosS = new FileOutputStream("arquivoSalas.txt",true); // escrever depois do arq. ja existente
+			oosS = new ObjectOutputStream(fosS);
+			for(i=1;i<listaSalas.size();i++){
+				oosS.writeObject(listaSalas.get(i));
+			}	
+
+			oosS.close();
+
+		}
 
 	}
 
 
+	
+	///////////////////////////////////////////MOSTRAR_LISTA_SALAS///////////////////////////////////////////////////////////////////
 	public ArrayList<Sala> mostrarListaSalas(){
-		return listaSalas;
-
-
+		ArrayList<Sala> retorno = new ArrayList<Sala>();
+		for(int i=0; i<listaSalas.size();i++){
+				retorno.add(listaSalas.get(i));
+			}
+		
+		
+		return retorno;
 	}
+		
 
 
+	
+
+//////////////////////////////////////////////////////ENVIAR_MSG////////////////////////////////////////////////////////////////////////////////
 	public void enviarMensagem(){
 
 	}

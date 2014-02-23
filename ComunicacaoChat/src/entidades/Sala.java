@@ -12,20 +12,25 @@ public class Sala implements Serializable{
 	int id;
 	boolean protegida;
 	String senha;
-	ArrayList<Usuario> lista;
+	ArrayList<Usuario> listaUsuarios;
 	Usuario dono;
 	File conversa;
 	
-	public Sala(ArrayList<Usuario> lista, String nome, boolean protegida, String senha, Usuario dono, File file){
+	public Sala(String nome, boolean protegida, String senha, Usuario dono){
 		this.nome = nome;
 		this.id = (int) (Math.random()*100); /// math.random 
-		this.lista = lista;
+		this.listaUsuarios = new ArrayList<Usuario>();
 		this.protegida = protegida;
 		this.senha = senha;		
 		this.dono = dono;
-		this.conversa = file;
+		this.conversa = new File(id + ".txt");
 	}
 		
+
+	public ArrayList<Usuario> getListaUsuarios() {
+		return listaUsuarios;
+	}
+
 
 	public File getConversa() {
 		return conversa;
@@ -37,13 +42,9 @@ public class Sala implements Serializable{
 	}
 
 
-	public ArrayList<Usuario> getLista() {
-		return lista;
-	}
 
-
-	public void setLista(ArrayList<Usuario> lista) {
-		this.lista = lista;
+	public void setListaUsuarios(ArrayList<Usuario> lista) {
+		this.listaUsuarios = lista;
 	}
 
 
@@ -55,7 +56,7 @@ public class Sala implements Serializable{
 		this.nome = nome;
 	}
 
-	public boolean isProtegida() {
+	public boolean getProtegida() {
 		return protegida;
 	}
 
@@ -90,10 +91,4 @@ public class Sala implements Serializable{
 	public void setDono(Usuario dono) {
 		this.dono = dono;
 	}
-	
-	
-	
-	
-	
-	 	
 }

@@ -16,7 +16,7 @@ public class Usuario implements Serializable {
 	String email;
 	InetAddress IP;
 	JLabel avatar;
-	boolean status = true; // online
+	boolean status; 
 	
 	public Usuario(String nome,String login, String senha,String email, JLabel avatar) {
 		this.nome = nome;
@@ -24,6 +24,7 @@ public class Usuario implements Serializable {
 		this.senha = senha;
 		this.email = email;
 		this.avatar = avatar;
+		this.status = true; // protegida
 	}
 
 	public String getLogin() {
@@ -40,10 +41,6 @@ public class Usuario implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public void setStatus(boolean status) {
-		this.status = status;
 	}
 
 
@@ -79,8 +76,12 @@ public class Usuario implements Serializable {
 		this.avatar = avatar;
 	}
 	
-	public boolean isStatus(){
+	public boolean getStatus(){
 		return status;
+	}
+	
+	public void setStatus(boolean  status){
+		this.status = status;
 	}
 	
 }
