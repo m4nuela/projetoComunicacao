@@ -164,15 +164,16 @@ public class Cadastro extends JFrame {
 		                               String haha = a + aux + a;
 		                               
 		                               
-		                               
+		                               System.out.println(haha);
 		                               tf_avatar.setIcon(new ImageIcon(haha));
+		                               
 		                               tf_avatar.setVisible(true);
 						}
 			}
 		});
 		
 		tf_avatar = new JLabel("");
-		tf_avatar.setIcon(new ImageIcon("C:\\Users\\Manuela\\Desktop\\AvatarDefault.png"));
+		tf_avatar.setIcon(new ImageIcon(Cadastro.class.getResource("/assets/AvatarDefault.png")));
 		tf_avatar.setBounds(235, 11, 227, 239);
 		contentPane.add(tf_avatar);
 		lblAlterarFoto.setForeground(new Color(0, 0, 153));
@@ -194,6 +195,7 @@ public class Cadastro extends JFrame {
 		
 		JButton btnCadastrar = new JButton("Cadastrar");
 		btnCadastrar.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				try {
 					core.cadastrarUsuario(tf_nome.getText(), tf_login.getText(), tf_senha.getText(), tf_email.getText(), tf_avatar);
