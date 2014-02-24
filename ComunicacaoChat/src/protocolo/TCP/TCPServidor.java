@@ -34,7 +34,7 @@ public class TCPServidor implements CamadaTransporte {
 		socketOut.reset();
 		socketOut.writeObject(in);
 		if (in instanceof Sala){
-			System.out.printf("Enviando uma sala com %d Usuários\n", ((Sala)in).getLista());
+			System.out.printf("Enviando uma sala com %d Usuários\n", ((Sala)in).getListaUsuarios());
 		}
 	}
 

@@ -319,9 +319,7 @@ public class Core {
 		ArrayList<Sala> retorno = new ArrayList<Sala>();
 		for(int i=0; i<listaSalas.size();i++){
 				retorno.add(listaSalas.get(i));
-			}
-		
-		
+			}				
 		return retorno;
 	}
 		
