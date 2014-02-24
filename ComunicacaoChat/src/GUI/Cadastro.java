@@ -66,8 +66,8 @@ public class Cadastro extends JFrame {
 	 * 
 	 * 
 	 */
-
-
+	
+	
 	public Cadastro() {
 		core = Login.getCore();
 		setResizable(false);
@@ -79,42 +79,42 @@ public class Cadastro extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setLocationRelativeTo(null); 
-
+		
 		JLabel lblNome = new JLabel("Nome : ");
 		lblNome.setBounds(27, 71, 46, 14);
 		contentPane.add(lblNome);
-
+		
 		JLabel lblLogin = new JLabel("Login : ");
 		lblLogin.setBounds(27, 108, 46, 14);
 		contentPane.add(lblLogin);
-
+		
 		JLabel lblSenha = new JLabel("Senha :");
 		lblSenha.setBounds(27, 144, 46, 14);
 		contentPane.add(lblSenha);
-
+		
 		JLabel lblEmail = new JLabel("Email :");
 		lblEmail.setBounds(27, 181, 46, 14);
 		contentPane.add(lblEmail);
-
+		
 		tf_nome = new JTextField();
 		tf_nome.setBounds(72, 68, 105, 20);
 		contentPane.add(tf_nome);
 		tf_nome.setColumns(10);
-
+		
 		tf_login = new JTextField();
 		tf_login.setBounds(72, 105, 105, 20);
 		contentPane.add(tf_login);
 		tf_login.setColumns(10);
-
+		
 		tf_email = new JTextField();
 		tf_email.setBounds(72, 178, 105, 20);
 		contentPane.add(tf_email);
 		tf_email.setColumns(10);
-
+		
 		tf_senha = new JPasswordField();
 		tf_senha.setBounds(72, 141, 105, 20);
 		contentPane.add(tf_senha);
-
+		
 		final JLabel lblAlterarFoto = new JLabel("Alterar foto de perfil");
 		lblAlterarFoto.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblAlterarFoto.addMouseListener(new MouseAdapter() {
@@ -130,45 +130,48 @@ public class Cadastro extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				JFileChooser fc = new JFileChooser();  
-				fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES); 
-				int res = fc.showOpenDialog(null);  
+		        fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES); 
+		int res = fc.showOpenDialog(null);  
 
-				if(res == JFileChooser.APPROVE_OPTION){  
-					File diretorio = fc.getSelectedFile();     
-					String local = diretorio.getAbsolutePath();
-					local = local +  File.separatorChar;
+						if(res == JFileChooser.APPROVE_OPTION){  
+							File diretorio = fc.getSelectedFile();     
+							String local = diretorio.getAbsolutePath();
+							local = local +  File.separatorChar;
 
-					String directoryName = local;
+							String directoryName = local;
 
-					String diretorioo = directoryName.replace('/', File.separatorChar);
-
-					char a = 92;
-					int i;
-					String aux = null;
-
-					for(i=0;i<diretorioo.length()-1;i++){
-						if(diretorioo.charAt(i) == 92 ){
-							aux += diretorioo.charAt(i);
-							aux += diretorioo.charAt(i);
-						}else{
-							if(i==0){
-								aux= diretorioo.charAt(i)+"";
-							}else{
-								aux += diretorioo.charAt(i);
-							}
+							String diretorioo = directoryName.replace('/', File.separatorChar);
+		                                        
+		                                        char a = 92;
+		                                        int i;
+		                                        String aux = null;
+		                                       
+		                                        for(i=0;i<diretorioo.length()-1;i++){
+		                                    if(diretorioo.charAt(i) == 92 ){
+		                                        aux += diretorioo.charAt(i);
+		                                        aux += diretorioo.charAt(i);
+		                                    }else{
+		                                        if(i==0){
+		                                            aux= diretorioo.charAt(i)+"";
+		                                        }else{
+		                                        aux += diretorioo.charAt(i);
+		                                    }
+		                                    }
+		                                }
+		                                        
+		                                     a = 34;   
+		                               
+		                               String haha = a + aux + a;
+		                               
+		                               
+		                               System.out.println(haha);
+		                               tf_avatar.setIcon(new ImageIcon(haha));
+		                               
+		                               tf_avatar.setVisible(true);
 						}
-					}
-
-
-					String haha =  aux +"";
-					System.out.println(haha);
-					tf_avatar.setIcon(new ImageIcon(haha));
-
-					tf_avatar.setVisible(true);
-				}
 			}
 		});
-
+		
 		tf_avatar = new JLabel("");
 		tf_avatar.setIcon(new ImageIcon(Cadastro.class.getResource("/assets/AvatarDefault.png")));
 		tf_avatar.setBounds(235, 11, 227, 239);
@@ -176,20 +179,20 @@ public class Cadastro extends JFrame {
 		lblAlterarFoto.setForeground(new Color(0, 0, 153));
 		lblAlterarFoto.setBounds(284, 246, 130, 14);
 		contentPane.add(lblAlterarFoto);
-
+		
 		JButton btnVoltar = new JButton("Voltar");
 		btnVoltar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Cadastro.this.dispose();
-
-
+			Cadastro.this.dispose();
+				
+				
 			}
 		});
 		btnVoltar.setForeground(Color.WHITE);
 		btnVoltar.setBackground(new Color(0, 102, 153));
 		btnVoltar.setBounds(20, 273, 89, 23);
 		contentPane.add(btnVoltar);
-
+		
 		JButton btnCadastrar = new JButton("Cadastrar");
 		btnCadastrar.addActionListener(new ActionListener() {
 			@SuppressWarnings("deprecation")
@@ -212,14 +215,14 @@ public class Cadastro extends JFrame {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 					e1.printStackTrace();
 				}
-
+				
 			}
 		});
 		btnCadastrar.setForeground(Color.WHITE);
 		btnCadastrar.setBackground(new Color(0, 102, 153));
 		btnCadastrar.setBounds(119, 273, 98, 23);
 		contentPane.add(btnCadastrar);
-
+		
 		JLabel label = new JLabel("");
 		label.setIcon(new ImageIcon("C:\\Users\\Manuela\\Desktop\\fundo.png"));
 		label.setToolTipText("");
