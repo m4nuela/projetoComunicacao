@@ -57,10 +57,13 @@ public class Core {
 
 
 		///Usuarios
-		fisU = new FileInputStream("arquivosUsuarios.txt");
+		File arqU =new File("arquivosUsuarios.txt");
+		fisU = new FileInputStream(arqU);
 		oisU = new ObjectInputStream(fisU);
+		 
+		
 
-
+      
 		while( ( user = (Usuario) oisU.readObject() ) != null){
 
 			listaUsuarios.add(user);  
@@ -68,11 +71,12 @@ public class Core {
 
 		oisU.close();
 
-
+       
 
 
 
 		///Salas
+		File arqS =new File("arquivosSalas.txt");
 		fisS = new FileInputStream("arquivosSalas.txt");
 		oisS = new ObjectInputStream(fisS);
 
@@ -83,9 +87,9 @@ public class Core {
 
 		oisS.close();
 
+		}
 
-
-	}
+	
 
 
 
@@ -105,7 +109,7 @@ public class Core {
 
 		}
 		
-		if(nome.equals(null) || login.equals(null) || senha.equals(null) || email.equals(null) || avatar.equals(null) ){
+		if(nome.equals("") || login.equals("") || senha.equals("") || email.equals("") || avatar.equals("") ){
 			throw new CampoObrigatorioException();
 		}else{
 
@@ -180,10 +184,14 @@ public class Core {
 
 
 	/////////////////////////////////////////LOGIN/////////////////////////////////////////////////////////////////////////////////////////////////
-	public void fazerLoginUsuario(String login, String senha) throws UsuarioInexistenteException, SenhaIncorretaException{
+	public void fazerLoginUsuario(String login, String senha) throws UsuarioInexistenteException, SenhaIncorretaException,CampoObrigatorioException{
 		existe = false;
+		i=0;
+		if(login.equals("") || senha.equals("")){
+			throw new CampoObrigatorioException();
+		}else{
 		while(existe == false && i<listaUsuarios.size()){ // Vejo se já existe alguem com o mesmo login ja cadastrado
-			if (listaUsuarios.get(i).getLogin() == login){
+			if (listaUsuarios.get(i).getLogin().equals(login)){
 				existe=true;
 				user = listaUsuarios.get(i);
 
@@ -204,7 +212,7 @@ public class Core {
 		}
 
 	}
-
+	}
 
 
 
@@ -246,7 +254,7 @@ public class Core {
 		}
 		
 
-		if(nome.equals(null) || senha.equals(null)){
+		if(nome.equals("") || senha.equals("")){
 			throw new CampoObrigatorioException();
 		}else{
 
