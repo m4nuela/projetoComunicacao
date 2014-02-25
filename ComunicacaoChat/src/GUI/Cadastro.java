@@ -221,7 +221,7 @@ public class Cadastro extends JFrame {
 		contentPane.add(btnCadastrar);
 
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon("C:\\Users\\Manuela\\Desktop\\fundo.png"));
+		label.setIcon(new ImageIcon(Cadastro.class.getResource("/assets/fundo.png")));
 		label.setToolTipText("");
 		label.setBounds(0, 0, 444, 326);
 		contentPane.add(label);
