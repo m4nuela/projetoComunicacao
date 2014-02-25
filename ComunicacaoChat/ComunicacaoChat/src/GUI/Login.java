@@ -109,13 +109,13 @@ public class Login extends JFrame {
 					System.out.println("login realizado !");
 				} catch (CampoObrigatorioException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-					//e1.printStackTrace();
+					e1.printStackTrace();
 				} catch (SenhaIncorretaException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-					//e1.printStackTrace();
+					e1.printStackTrace();
 				} catch (UsuarioInexistenteException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-					//e1.printStackTrace();
+					e1.printStackTrace();
 				}
 				
 			
@@ -146,7 +146,7 @@ public class Login extends JFrame {
 		JLabel fundo = new JLabel("");
 		fundo.setToolTipText("");
 		fundo.setBounds(0, 0, 444, 326);
-		fundo.setIcon(new ImageIcon(Login.class.getResource("/assets/fundo.png")));
+		fundo.setIcon(new ImageIcon("C:\\Users\\Manuela\\Desktop\\fundo.png"));
 		contentPane.add(fundo);
 	}
 }

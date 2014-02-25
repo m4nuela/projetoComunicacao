@@ -29,10 +29,10 @@ public class Core {
 	ArrayList<Usuario> listaUsuariosOnline;
 	CamadaTransporte protocolo;
 	Usuario user = new Usuario(null, null, null, null, null);
-	Sala sala = new Sala(null, false, null, user);
+	Sala sala = new Sala(null, false, null, user, 0);
 	boolean existe;
 	boolean logado;
-	int i; 
+	int i;
 	FileOutputStream fosU;
 	ObjectOutputStream oosU;
 	FileOutputStream fosS;
@@ -59,65 +59,35 @@ public class Core {
 		///Usuarios
 		File arqU =new File("arquivosUsuarios.txt");
 		fisU = new FileInputStream(arqU);
-		System.out.println(fisU.available()+"");
-		if(fisU.available()>5){
-			oisU = new ObjectInputStream(fisU);
+		oisU = new ObjectInputStream(fisU);
 
 
 
 
-			boolean entrar = true;
-			while(entrar){
+		while( ( user = (Usuario) oisU.readObject() ) != null){
 
-				if((user = (Usuario) oisU.readObject()) != null){
-
-					listaUsuarios.add(user);  
-
-
-					if(fisU.available()<100){
-						entrar = false;
-					}
-				}
-			}
-
-
-			oisU.close();
+			listaUsuarios.add(user);  
 		}
-		fisU.close();
 
+		oisU.close();
 
 
 
 
 
 		///Salas
-
 		File arqS =new File("arquivosSalas.txt");
-		fisS = new FileInputStream(arqS);
-		if(fisS.available()>5){
-			oisS = new ObjectInputStream(fisS);
+		fisS = new FileInputStream("arquivosSalas.txt");
+		oisS = new ObjectInputStream(fisS);
 
+		while( ( sala = (Sala) oisS.readObject() ) != null){
 
-
-			boolean entrar;
-			entrar = true;
-			while(entrar){
-				if( ( sala = (Sala) oisS.readObject() ) != null){
-
-					listaSalas.add(sala);  
-
-					if(oisS.available()==0){
-						entrar = false;
-					}
-
-				}
-			}
-
-			oisS.close();
+			listaSalas.add(sala);  
 		}
-		fisS.close();
-	}
 
+		oisS.close();
+
+	}
 
 
 
@@ -142,47 +112,25 @@ public class Core {
 		if(nome.equals("") || login.equals("") || senha.equals("") || email.equals("") || avatar.equals("") ){
 			throw new CampoObrigatorioException();
 		}else{
-			if(i == 0){
-				user.setNome(nome);
-				user.setLogin(login);
-				user.setSenha(senha);
-				user.setEmail(email);
-				user.setAvatar(avatar);
-				listaUsuarios.add(user); // adiciono à lista
-			} else {
-				user = new Usuario(nome, login, senha, email, avatar);
-				listaUsuarios.add(user); // adiciono à lista
-			}
+
+			user.setNome(nome);
+			user.setLogin(login);
+			user.setSenha(senha);
+			user.setEmail(email);
+			user.setAvatar(avatar);
 
 
-			/*
-			if(listaUsuarios.size()>1){
 
-				fisU = new FileInputStream("arquivosUsuarios.txt");
-				oisU = new ObjectInputStream(fisU);
-			} */
-			fosU = new FileOutputStream("arquivosUsuarios.txt"); 
+			listaUsuarios.add(user); // adiciono à lista 
+
+			fosU = new FileOutputStream("arquivoUsuarios.txt",true);  // gravar no arquivo e nao sobrescrever
 			oosU = new ObjectOutputStream(fosU);
-
-			if(listaUsuarios.size()>1){
-				int j=0;
-				while(j<listaUsuarios.size()){
-					user = listaUsuarios.get(j);
-					oosU.writeObject(user);
-					j++;
-				}
-
-			}
 
 			// salva o objeto
 			oosU.writeObject(user);
 
-			/*if(listaUsuarios.size()>1){
-				oisU.close();
-			}*/
 			oosU.close();
 		}
-
 	}
 
 
@@ -207,12 +155,12 @@ public class Core {
 		if(existe){
 			user.setNome(nome);
 			user.setSenha(senha);
-			user.setEmail(email);
+			user.setEmail(email);   //Não pode mudar em atualização!!
 			user.setAvatar(avatar);
 
 			listaUsuarios.set(i, user); // depois de atualizar o dado na lista e tenho  q atualizar no arquivo!
 
-			fosU = new FileOutputStream("arquivosUsuario.txt",false); // sobreescrever o arquivo com o obj.
+			fosU = new FileOutputStream("arquivoUsuario.txt",false); // sobreescrever o arquivo com o obj.
 			oosU = new ObjectOutputStream(fosU);
 			oosU.writeObject(listaUsuarios.get(0)); // pega o primeiro obj. da lista
 			oosU.close();
@@ -220,7 +168,7 @@ public class Core {
 
 
 
-			fosU = new FileOutputStream("arquivosUsuario.txt",true); // escrever depois do arq. ja existente
+			fosU = new FileOutputStream("arquivoUsuario.txt",true); // escrever depois do arq. ja existente
 			oosU = new ObjectOutputStream(fosU);
 			for(i=1;i<listaUsuarios.size();i++){
 				oosU.writeObject(listaUsuarios.get(i));
@@ -290,7 +238,7 @@ public class Core {
 
 
 	///////////////////////////////////////////////////////CRIAR_SALA///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public void criarSala(String nome, boolean protegida, String senha, Usuario dono) throws SalaJaExistenteException, CampoObrigatorioException, IOException {
+	public void criarSala(String nome, boolean protegida, String senha, Usuario dono) throws SalaJaExistenteException, CampoObrigatorioException {
 		/* toda sala tem que ter a lista de usuarios, e o dono(a pessoa que criou) a sala*/
 		boolean existe = false;
 		i=0;
@@ -299,6 +247,7 @@ public class Core {
 			if (listaSalas.get(i).getNome().equalsIgnoreCase(nome)){
 				existe=true;
 				throw new SalaJaExistenteException(nome); // na GUI é que eu a trato
+
 			}else{
 				i++;
 			}
@@ -310,38 +259,15 @@ public class Core {
 			throw new CampoObrigatorioException();
 		}else{
 
-			if(i==0){
-				sala.setNome(nome);
-				sala.setProtegida(protegida);
-				sala.setSenha(senha);
-				sala.setDono(dono);
-				sala.getListaUsuarios().add(dono);
-				listaSalas.add(sala);
-			}else{
-				sala = new Sala(nome,protegida,senha,dono); 
-				sala.getListaUsuarios().add(dono);
-				listaSalas.add(sala);
-			}
+			sala.setNome(nome);
+			sala.setProtegida(protegida);
+			sala.setSenha(senha);
+			sala.setDono(dono);
+			sala.setId(checkID());
 
+			sala.getListaUsuarios().add(dono);
 
-			fosS = new FileOutputStream("arquivosSalas.txt"); 
-			oosS = new ObjectOutputStream(fosS);
-
-			if(listaSalas.size()>1){
-				int j=0;
-				while(j<listaSalas.size()){
-					sala = listaSalas.get(j);
-					oosS.writeObject(sala);
-					j++;
-				}
-
-			}
-
-			// salva o objeto
-			oosS.writeObject(sala);
-
-			oosS.close();
-
+			listaSalas.add(sala);
 		}		
 	}
 
@@ -368,7 +294,7 @@ public class Core {
 
 			listaSalas.set(i, sala); // depois de atualizar o dado na lista e tenho  q atualizar no arquivo!
 
-			fosS = new FileOutputStream("arquivosSalas.txt",false); // sobreescrever o arquivo com o obj.
+			fosS = new FileOutputStream("arquivoSalas.txt",false); // sobreescrever o arquivo com o obj.
 			oosS = new ObjectOutputStream(fosS);
 			oosS.writeObject(listaSalas.get(0)); // pega o primeiro obj. da lista
 			oosS.close();
@@ -376,7 +302,7 @@ public class Core {
 
 
 
-			fosS = new FileOutputStream("arquivosSalas.txt",true); // escrever depois do arq. ja existente
+			fosS = new FileOutputStream("arquivoSalas.txt",true); // escrever depois do arq. ja existente
 			oosS = new ObjectOutputStream(fosS);
 			for(i=1;i<listaSalas.size();i++){
 				oosS.writeObject(listaSalas.get(i));
@@ -395,9 +321,7 @@ public class Core {
 		ArrayList<Sala> retorno = new ArrayList<Sala>();
 		for(int i=0; i<listaSalas.size();i++){
 			retorno.add(listaSalas.get(i));
-		}
-
-
+		}				
 		return retorno;
 	}
 
@@ -410,5 +334,27 @@ public class Core {
 
 	}
 
+	public boolean buscarID(int id){
+		boolean retorno = false;
+		int i = 0;
+		while(i < listaSalas.size()){
+			if(listaSalas.get(i).getId() == id){
+				retorno = true;
+			} else {
+				i++;
+			}
+		}
+
+		return retorno;
+	}
+
+	public int checkID(){
+		int valor;
+		do{
+			valor = (int) (Math.random()*100);
+		} while(buscarID(valor) == false);
+
+		return valor;
+	}
 
 }
