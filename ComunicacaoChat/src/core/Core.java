@@ -30,7 +30,7 @@ public class Core {
 	CamadaTransporte protocolo;
 	Usuario user = new Usuario(null, null, null, null, null);
 	Sala sala = new Sala(null, false, null, user);
-	boolean existe;
+	//boolean existe;
 	boolean logado;
 	int i; 
 	FileOutputStream fosU;
@@ -55,16 +55,12 @@ public class Core {
 	///////////////////////////////////INICIALIZAR_LISTAS//////////////////////////////////////////////////////////////////////////////////////////
 	public void inicializarListas() throws IOException, FileNotFoundException, ClassNotFoundException{
 
-
 		///Usuarios
 		File arqU =new File("arquivosUsuarios.txt");
 		fisU = new FileInputStream(arqU);
 		System.out.println(fisU.available()+"");
 		if(fisU.available()>5){
 			oisU = new ObjectInputStream(fisU);
-
-
-
 
 			boolean entrar = true;
 			while(entrar){
@@ -87,9 +83,6 @@ public class Core {
 
 
 
-
-
-
 		///Salas
 
 		File arqS =new File("arquivosSalas.txt");
@@ -97,50 +90,41 @@ public class Core {
 		if(fisS.available()>5){
 			oisS = new ObjectInputStream(fisS);
 
-
-
 			boolean entrar;
 			entrar = true;
 			while(entrar){
 				if( ( sala = (Sala) oisS.readObject() ) != null){
-
 					listaSalas.add(sala);  
 
 					if(oisS.available()==0){
 						entrar = false;
 					}
-
 				}
 			}
-
 			oisS.close();
 		}
 		fisS.close();
 	}
 
 
-
-
-
-
-
 	///////////////////////////////////CADASTRAR_USUARIO//////////////////////////////////////////////////////////////////////////////////////////////////////
 	public void cadastrarUsuario(String nome,String login, String senha,String email, JLabel avatar) throws LoginJaExistenteException, CampoObrigatorioException, IOException, FileNotFoundException, ClassNotFoundException{
-		existe = false;
+		boolean existe = false;
+
 		i=0;
 
 		while(existe == false && i<listaUsuarios.size()){ // Vejo se já existe alguem com o mesmo login ja cadastrado
 			if (listaUsuarios.get(i).getLogin().equalsIgnoreCase(login)){
 				existe=true;
 				throw new LoginJaExistenteException(login); // na GUI é que eu a trato
-			}else{
+			} else {
 				i++;
 			}
-
 		}
 
-		if(nome.equals("") || login.equals("") || senha.equals("") || email.equals("") || avatar.equals("") ){
+		if(nome.equals("") || login.equals("") || senha.equals("") || email.equals("") || avatar.equals("")) {
 			throw new CampoObrigatorioException();
+
 		}else{
 			if(i == 0){
 				user.setNome(nome);
@@ -154,13 +138,13 @@ public class Core {
 				listaUsuarios.add(user); // adiciono à lista
 			}
 
-
 			/*
 			if(listaUsuarios.size()>1){
 
 				fisU = new FileInputStream("arquivosUsuarios.txt");
 				oisU = new ObjectInputStream(fisU);
 			} */
+
 			fosU = new FileOutputStream("arquivosUsuarios.txt"); 
 			oosU = new ObjectOutputStream(fosU);
 
@@ -171,7 +155,6 @@ public class Core {
 					oosU.writeObject(user);
 					j++;
 				}
-
 			}
 
 			// salva o objeto
@@ -182,17 +165,13 @@ public class Core {
 			}*/
 			oosU.close();
 		}
-
 	}
-
-
-
 
 
 	/////////////////////////////////////////ATUALIZAR_USUARIO////////////////////////////////////////////////////////////////////////////////////////
 	public void atualizarUsuario(String nome,String login, String senha,String email, JLabel avatar) throws IOException{
-		existe = false;
-		logado = false;
+		boolean existe = false;
+		boolean logado = false;
 
 		while(existe == false && i<listaUsuarios.size()){ // Vejo se existe alguem com o mesmo login ja cadastrado
 			if (listaUsuarios.get(i).getLogin() == login){
@@ -202,7 +181,6 @@ public class Core {
 			}else{
 				i++;
 			}
-
 		}
 		if(existe){
 			user.setNome(nome);
@@ -237,7 +215,7 @@ public class Core {
 
 	/////////////////////////////////////////LOGIN/////////////////////////////////////////////////////////////////////////////////////////////////
 	public void fazerLoginUsuario(String login, String senha) throws UsuarioInexistenteException, SenhaIncorretaException,CampoObrigatorioException{
-		existe = false;
+		boolean existe = false;
 		i=0;
 		if(login.equals("") || senha.equals("")){
 			throw new CampoObrigatorioException();
@@ -349,7 +327,7 @@ public class Core {
 	////////////////////////////////////////////////////////ATUALIZAR_SALA///////////////////////////////////////////////////////////////////
 	public void atualizarSala(String nome, boolean protegida,String senha) throws IOException{
 
-		existe = false;
+		boolean existe = false;
 
 		while(existe == false && i<listaSalas.size()){ // Vejo se existe alguem com o mesmo login ja cadastrado
 			if ((listaSalas.get(i).getNome()).equalsIgnoreCase(nome)){
@@ -372,23 +350,18 @@ public class Core {
 			oosS = new ObjectOutputStream(fosS);
 			oosS.writeObject(listaSalas.get(0)); // pega o primeiro obj. da lista
 			oosS.close();
+
+
+
 			// salva o objeto
-
-
-
 			fosS = new FileOutputStream("arquivosSalas.txt",true); // escrever depois do arq. ja existente
 			oosS = new ObjectOutputStream(fosS);
 			for(i=1;i<listaSalas.size();i++){
 				oosS.writeObject(listaSalas.get(i));
 			}	
-
 			oosS.close();
-
 		}
-
 	}
-
-
 
 	///////////////////////////////////////////MOSTRAR_LISTA_SALAS///////////////////////////////////////////////////////////////////
 	public ArrayList<Sala> mostrarListaSalas(){
@@ -396,19 +369,12 @@ public class Core {
 		for(int i=0; i<listaSalas.size();i++){
 			retorno.add(listaSalas.get(i));
 		}
-
-
 		return retorno;
 	}
-
-
-
 
 
 	//////////////////////////////////////////////////////ENVIAR_MSG////////////////////////////////////////////////////////////////////////////////
 	public void enviarMensagem(){
 
 	}
-
-
 }
