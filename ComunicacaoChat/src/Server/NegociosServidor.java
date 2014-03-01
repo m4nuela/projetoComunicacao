@@ -33,6 +33,7 @@ public class NegociosServidor {
 		String senhaSala = (String) comunicacao.receber();
 		Usuario donoSala = (Usuario) comunicacao.receber();
 		sala = new Sala(nomeSala, protegidaSala, senhaSala, donoSala);
+		this.gravarArquivoSala(sala);
 		return sala;
 	}
 
@@ -150,7 +151,7 @@ public class NegociosServidor {
 		return listaUsuarios;
 	}
 
-	void gravarArquivoSala() throws IOException, ClassNotFoundException{
+	void gravarArquivoSala(Sala sala2) throws IOException, ClassNotFoundException{
 		File file = new File("arquivosSalas.txt");
 		FileOutputStream fosS = new FileOutputStream(file); 
 		ObjectOutputStream oosS = new ObjectOutputStream(fosS);
@@ -161,9 +162,7 @@ public class NegociosServidor {
 			oosS.writeObject(sala);
 		}
 
-
-		Sala sala = (Sala) comunicacao.receber();
-		oosS.writeObject(sala);
+		oosS.writeObject(sala2);
 		oosS.close();
 	}
 
@@ -239,8 +238,9 @@ public class NegociosServidor {
 	}
 
 
-	void entrarSala(ArrayList<Sala> listaSalas, ArrayList<Usuario> listaUsuarios) throws ClassNotFoundException, IOException{
-
+	void entrarSala() throws ClassNotFoundException, IOException{
+		ArrayList<Sala> listaSalas = (ArrayList<Sala>) comunicacao.receber();
+		ArrayList<Usuario> listaUsuarios = (ArrayList<Usuario>) comunicacao.receber();
 		Usuario usuario  =  (Usuario) comunicacao.receber();
 		Sala sala = (Sala) comunicacao.receber();
 
@@ -283,14 +283,19 @@ public class NegociosServidor {
 
 
 
-	void sairSala(ArrayList<Sala> listaSalas) throws ClassNotFoundException, IOException{
-
+	void sairSala() throws ClassNotFoundException, IOException{
+        ArrayList<Usuario> listaUsuarios = (ArrayList<Usuario>) comunicacao.receber();
+		ArrayList<Sala> listaSalas = (ArrayList<Sala>) comunicacao.receber();
 		Usuario usuario  =  (Usuario) comunicacao.receber();
 		Sala sala = (Sala) comunicacao.receber();
 
 		File file = new File("arquivosSalas.txt");
 		FileOutputStream fosS = new FileOutputStream(file); 
 		ObjectOutputStream oosS = new ObjectOutputStream(fosS);
+		
+		File fileU = new File("arquivosUsuarios.txt");
+		FileOutputStream fosU = new FileOutputStream(fileU); 
+		ObjectOutputStream oosU = new ObjectOutputStream(fosU);
 
 
 		for (int i = 0; i < listaSalas.size(); i++) {
@@ -301,9 +306,19 @@ public class NegociosServidor {
 			}
 		}
 
-
-
 		oosS.close();
+		
+		
+		for (int i = 0; i < listaUsuarios.size(); i++) {
+			Usuario usuarioAux = listaUsuarios.get(i);
+			if(usuarioAux==usuario){
+				listaUsuarios.get(i).getSalasParticipa().remove(sala);
+			}else{
+				oosU.writeObject(usuarioAux);
+			}
+		}
+
+		oosU.close();
 
 
 	}
@@ -348,6 +363,8 @@ public class NegociosServidor {
 		ArrayList lista = user.getSalasParticipa();
 		comunicacao.enviar(lista);
 	}
+	
+	
 	
 	void mostrarListaUsuariosOnline(ArrayList <Usuario> lista ) throws IOException{
 		ArrayList <Usuario> listaOnline = new ArrayList<Usuario>();
