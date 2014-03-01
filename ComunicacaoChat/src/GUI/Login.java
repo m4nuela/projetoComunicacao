@@ -47,7 +47,6 @@ public class Login extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -139,9 +138,9 @@ public class Login extends JFrame {
 		btn_cadastar.setBounds(301, 280, 98, 23);
 		contentPane.add(btn_cadastar);
 		
-		JLabel lblNewLabel = new JLabel("Logo do APP");
-		lblNewLabel.setFont(new Font("Ravie", Font.PLAIN, 36));
-		lblNewLabel.setBounds(78, 81, 289, 68);
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(Login.class.getResource("/assets/logooo.png")));
+		lblNewLabel.setBounds(51, 68, 414, 160);
 		contentPane.add(lblNewLabel);
 		
 		JLabel fundo = new JLabel("");

@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import javax.swing.JLabel;
 
 import entidades.*;
+import exceptions.SenhaIncorretaException;
+import exceptions.UsuarioInexistenteException;
 import protocolo.TCP.*;
 
 public class NegociosServidor {
@@ -58,6 +60,8 @@ public class NegociosServidor {
 			comunicacao.enviar(sala);
 		}
 	}
+
+
 
 	void enviarUsuario(Usuario user) throws IOException {
 		comunicacao.enviar("enviarUsuario");
@@ -113,11 +117,11 @@ public class NegociosServidor {
 		while(entrar){
 			if((sala = (Sala) oisS.readObject() ) != null){
 				listaSalas.add(sala); 
-				if(oisS.available()==0){
-					entrar = false;
-				}
+			}else{
+				entrar = false;
 			}
 		}
+
 		comunicacao.enviar(listaSalas);
 		oisS.close();
 		fisS.close();
@@ -135,11 +139,11 @@ public class NegociosServidor {
 		while(entrar){
 			if((user = (Usuario) oisU.readObject()) != null){
 				listaUsuarios.add(user);  
-				if(fisU.available()<100){
-					entrar = false;
-				}
+			}else{
+				entrar = false;
 			}
 		}
+
 		comunicacao.enviar(listaUsuarios);
 		oisU.close();
 		fisU.close();
@@ -181,11 +185,11 @@ public class NegociosServidor {
 	}
 
 
-	void atualizarArquivoSala() throws IOException, ClassNotFoundException{
+	void atualizarArquivoSala(ArrayList<Sala> listaSalas) throws IOException, ClassNotFoundException{
 		File file = new File("arquivosSalas.txt");
 		FileOutputStream fosS = new FileOutputStream(file); 
 		ObjectOutputStream oosS = new ObjectOutputStream(fosS);
-		ArrayList<Sala> listaSalas = this.lerArquivoSala();
+
 
 		String nomeSala = (String) comunicacao.receber();
 		boolean protegidaSala = Boolean.parseBoolean(comunicacao.receber().toString());
@@ -207,11 +211,11 @@ public class NegociosServidor {
 		oosS.close();
 	}
 
-	void atualizarArquivoUsuario() throws IOException, ClassNotFoundException{
+	void atualizarArquivoUsuario(ArrayList<Usuario> listaUsuario) throws IOException, ClassNotFoundException{
 		File file = new File("arquivosUsuario.txt");
 		FileOutputStream fosU = new FileOutputStream(file); 
 		ObjectOutputStream oosU = new ObjectOutputStream(fosU);
-		ArrayList<Usuario> listaUsuario = this.lerArquivoUsuario();
+
 
 		String nomeUser = (String) comunicacao.receber();
 		String loginUser = (String) comunicacao.receber();
@@ -221,7 +225,7 @@ public class NegociosServidor {
 
 		for (int i = 0; i < listaUsuario.size(); i++) {
 			Usuario usuario = listaUsuario.get(i);
-			if(usuario.getLogin().equalsIgnoreCase(listaUsuario.get(i).getLogin())){
+			if(usuario.getLogin().equalsIgnoreCase(loginUser)){
 				usuario.setNome(nomeUser);
 				usuario.setEmail(emailUser);
 				usuario.setSenha(senhaUser);
@@ -233,6 +237,132 @@ public class NegociosServidor {
 		}
 		oosU.close();
 	}
+
+
+	void entrarSala(ArrayList<Sala> listaSalas, ArrayList<Usuario> listaUsuarios) throws ClassNotFoundException, IOException{
+
+		Usuario usuario  =  (Usuario) comunicacao.receber();
+		Sala sala = (Sala) comunicacao.receber();
+
+		File file = new File("arquivosSalas.txt");
+		FileOutputStream fosS = new FileOutputStream(file); 
+		ObjectOutputStream oosS = new ObjectOutputStream(fosS);
+
+
+		File fileU = new File("arquivosUsuarios.txt");
+		FileOutputStream fosU = new FileOutputStream(fileU); 
+		ObjectOutputStream oosU = new ObjectOutputStream(fosU);
+
+
+		for (int i = 0; i < listaSalas.size(); i++) {
+			Sala salaAux = listaSalas.get(i);
+			if(salaAux.getId()==sala.getId()){
+				listaSalas.get(i).getListaUsuarios().add(usuario);
+				oosS.writeObject(sala);
+			}else{
+				oosS.writeObject(salaAux);
+			}
+		}
+		oosS.close();
+
+
+		for (int i = 0; i < listaUsuarios.size(); i++) {
+			Usuario usuarioAux = listaUsuarios.get(i);
+			if(usuarioAux==usuario){
+				usuario.getSalasParticipa().add(sala);
+				oosU.writeObject(usuario);
+			}else{
+				oosU.writeObject(usuarioAux);
+			}
+		}
+
+		oosU.close();
+
+
+	}
+
+
+
+	void sairSala(ArrayList<Sala> listaSalas) throws ClassNotFoundException, IOException{
+
+		Usuario usuario  =  (Usuario) comunicacao.receber();
+		Sala sala = (Sala) comunicacao.receber();
+
+		File file = new File("arquivosSalas.txt");
+		FileOutputStream fosS = new FileOutputStream(file); 
+		ObjectOutputStream oosS = new ObjectOutputStream(fosS);
+
+
+		for (int i = 0; i < listaSalas.size(); i++) {
+			if(listaSalas.get(i).getId()==sala.getId()){
+				listaSalas.get(i).getListaUsuarios().remove(usuario);
+			}else{
+				oosS.writeObject(sala);
+			}
+		}
+
+
+
+		oosS.close();
+
+
+	}
+
+	public void fazerLoginUsuario(ArrayList<Usuario> listaUsuarios) throws SenhaIncorretaException, UsuarioInexistenteException, IOException, ClassNotFoundException{
+		String login = (String) comunicacao.receber();
+		String senha = (String) comunicacao.receber();
+		Usuario user = null;
+
+		int i=0;
+		boolean existe = false;
+		boolean logado = false;
+
+
+		while(!existe && i<listaUsuarios.size()){ // Vejo se já existe alguem com o mesmo login ja cadastrado
+			if (listaUsuarios.get(i).getLogin().equals(login)){
+				existe=true;
+				user = listaUsuarios.get(i);
+
+			}else{
+				i++;
+			}
+
+
+		}
+		if(existe == true){
+			if(senha.equals(user.getSenha())){
+				logado = true;
+				comunicacao.enviar(logado);
+			}else{
+				throw new SenhaIncorretaException();
+			}
+		}else{
+			throw new UsuarioInexistenteException(login);
+		}
+
+	}
+	
+	
+	void mostrarListaSalasUsuario() throws ClassNotFoundException, IOException{
+		Usuario user = (Usuario) comunicacao.receber();
+		ArrayList lista = user.getSalasParticipa();
+		comunicacao.enviar(lista);
+	}
+	
+	void mostrarListaUsuariosOnline(ArrayList <Usuario> lista ) throws IOException{
+		ArrayList <Usuario> listaOnline = new ArrayList<Usuario>();
+		
+		for(int i=0;i<lista.size(); i++){
+			Usuario userAux = lista.get(i);
+			if(userAux.getStatus()==true){
+				listaOnline.add(userAux);
+			}
+		}
+		
+		
+		comunicacao.enviar(listaOnline);
+	}
+
 
 
 }

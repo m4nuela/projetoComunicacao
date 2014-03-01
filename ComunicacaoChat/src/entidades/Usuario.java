@@ -1,6 +1,7 @@
 package entidades;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.io.Serializable;
 
 import javax.swing.JLabel;
@@ -16,7 +17,8 @@ public class Usuario implements Serializable {
 	String email;
 	InetAddress IP;
 	JLabel avatar;
-	boolean status; 
+	boolean status;
+	ArrayList <Sala> salasParticipa;
 	
 	public Usuario(String nome,String login, String senha,String email, JLabel avatar) {
 		this.nome = nome;
@@ -25,7 +27,8 @@ public class Usuario implements Serializable {
 		this.email = email;
 		this.avatar = avatar;
 		this.status = true; // protegida
-	}
+		this.salasParticipa = new ArrayList<Sala>();
+		}
 
 	public String getLogin() {
 		return login;
@@ -33,6 +36,18 @@ public class Usuario implements Serializable {
 
 	public void setLogin(String login) {
 		this.login = login;
+	}
+
+	public ArrayList<Sala> getSalasParticipa() {
+		return salasParticipa;
+	}
+
+	public void setSalasParticipa(ArrayList<Sala> salasParticipa) {
+		this.salasParticipa = salasParticipa;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	public String getEmail() {

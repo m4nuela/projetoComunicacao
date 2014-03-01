@@ -2,7 +2,9 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Graphics2D;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -29,6 +31,7 @@ import java.awt.Font;
 import java.awt.Window.Type;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -142,7 +145,7 @@ public class Cadastro extends JFrame {
 
 					String diretorioo = directoryName.replace('/', File.separatorChar);
 
-					char a = 92;
+					
 					int i;
 					String aux = null;
 
@@ -161,8 +164,40 @@ public class Cadastro extends JFrame {
 
 
 					String haha =  aux +"";
-					System.out.println(haha);
+					
+					
+					BufferedImage imagem = null;
+					try {
+						imagem = ImageIO.read(new File(haha));
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				
+					int auxW = 190;
+					int auxH = 239;
+					
+					
+					
+					BufferedImage newImage = new BufferedImage(auxW,auxH,BufferedImage.TYPE_INT_RGB);		
+					Graphics2D g = newImage.createGraphics();
+					g.drawImage(imagem, 0, 0,auxW,auxH,null);
+					
 					tf_avatar.setIcon(new ImageIcon(haha));
+					
+					String ha = "src/assets/imgPeq.png";
+					
+							
+					try {
+						ImageIO.write(newImage, "PNG", new File(ha));
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+					
+					
+					tf_avatar.setIcon(new ImageIcon(ha));
 
 					tf_avatar.setVisible(true);
 				}
