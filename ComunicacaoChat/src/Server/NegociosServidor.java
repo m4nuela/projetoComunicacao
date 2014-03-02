@@ -35,6 +35,8 @@ public class NegociosServidor {
 		Usuario donoSala = (Usuario) comunicacao.receber();
 		sala = new Sala(nomeSala, protegidaSala, senhaSala, donoSala);
 		this.gravarArquivoSala(sala);
+	    comunicacao.enviar("receberSala");
+	    comunicacao.enviar(sala);
 	}
 
 	void cadastrarUsuario() throws ClassNotFoundException, IOException, LoginJaExistenteException, CampoObrigatorioException, FileNotFoundException {
@@ -47,6 +49,8 @@ public class NegociosServidor {
 		user = new Usuario (nomeUser, loginUser, senhaUser, emailUser, avatarUser);
 		user.setIP(((TCPServidor) comunicacao).getSocket().getInetAddress());
 		this.gravarArquivoUsuario(user);
+		comunicacao.enviar("receberUsuario");
+		comunicacao.enviar(user);
 	}
 
 	InfoSala entrarSala() throws ClassNotFoundException, IOException{
@@ -112,6 +116,11 @@ public class NegociosServidor {
 		for (int i = 0; i < listaSalas.size(); i++) {
 			if(listaSalas.get(i).getId()==sala.getId()){
 				listaSalas.get(i).getListaUsuarios().remove(usuario);
+				if(usuario == sala.getDono()){
+					listaSalas.remove(sala);
+				}else{
+					oosS.writeObject(sala);
+				}
 			}else{
 				oosS.writeObject(sala);
 			}
@@ -191,7 +200,7 @@ public class NegociosServidor {
 
 
 	void enviarObjeto(Object objeto) throws IOException {
-		comunicacao.enviar("enviarObjeto");
+		comunicacao.enviar("receberObjeto");
 		comunicacao.enviar(objeto);
 	}
 

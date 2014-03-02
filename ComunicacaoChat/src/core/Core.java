@@ -57,10 +57,12 @@ public class Core {
 
 
 	///////////////////////////////////CADASTRAR_USUARIO//////////////////////////////////////////////////////////////////////////////////////////////////////
-	public void cadastrarUsuario(String nome, String login, String senha,String email, JLabel avatar) throws LoginJaExistenteException, CampoObrigatorioException, IOException, FileNotFoundException, ClassNotFoundException{
+	public Usuario cadastrarUsuario(String nome, String login, String senha,String email, JLabel avatar) throws LoginJaExistenteException, CampoObrigatorioException, IOException, FileNotFoundException, ClassNotFoundException{
 
 		negocios.cadastrarUsuario(nome, login, senha, email, avatar);
 		listaUsuarios = negocios.receberListaUsuarios();
+		Usuario user= negocios.receberUsuario();
+        return user;	
 	}
 
 	/////////////////////////////////////////ATUALIZAR_USUARIO////////////////////////////////////////////////////////////////////////////////////////
@@ -89,15 +91,17 @@ public class Core {
 
 	//////////////////////////////////////////MOSTRAR_LISTA_USUARIOS_ONLINE///////////////////////////////////////////////////////////////////////////
 	public ArrayList<Usuario> mostrarListaUsuariosOnline() throws IOException, ClassNotFoundException {
-		ArrayList<Usuario> retorno = listaUsuariosOnline;
+		ArrayList<Usuario> retorno = negocios.receberListaUsuariosOnline();
 		return retorno;
 	}
 
 
 	///////////////////////////////////////////////////////CRIAR_SALA///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public void criarSala(String nome, boolean protegida, String senha, Usuario dono) throws SalaJaExistenteException, CampoObrigatorioException, IOException, ClassNotFoundException {
+	public Sala criarSala(String nome, boolean protegida, String senha, Usuario dono) throws SalaJaExistenteException, CampoObrigatorioException, IOException, ClassNotFoundException {
 		negocios.criarSala(nome, protegida, senha, dono);
 		listaSalas = negocios.receberListaSalas();
+		Sala aux =  negocios.receberSala();
+		return aux;
 	}
 
 	////////////////////////////////////////////////////////ATUALIZAR_SALA///////////////////////////////////////////////////////////////////
@@ -106,27 +110,83 @@ public class Core {
 		listaSalas = negocios.receberListaSalas();
 	}
 
-	///////////////////////////////////////////MOSTRAR_LISTA_SALAS///////////////////////////////////////////////////////////////////
-	public ArrayList<Sala> mostrarListaSalas(){
-		ArrayList<Sala> retorno = listaSalas;
-		return retorno;
-	}
 
 	//////////////////////////////////////////////////////ENVIAR_MSG////////////////////////////////////////////////////////////////////////////////
 	public void enviarMensagem(String messagem, Sala sala) throws IOException{
-		negocios.enviarMensagem(messagem, sala);
-		
-		
+		negocios.enviarMensagem(messagem, sala);	
 	}
+	
+	/////////////////////////////////////////////////////RECEBER_MENSAGEM///////////////////////////////////////////////////////////////////////////
 	public String receberMensagem() throws ClassNotFoundException, IOException{
 		return negocios.receberMensagem();
 	}
-
+	
+	
+///////////////////////////////////////////////////////ENTRAR_SALA//////////////////////////////////////////////////////////////////////////////////	
 	void entrarSala(Usuario usuario, Sala sala) throws IOException, ClassNotFoundException{
 		negocios.entrarSala(listaSalas, listaUsuarios, usuario, sala);
 		listaSalas = negocios.receberListaSalas();
 		listaUsuarios = negocios.receberListaUsuarios();
 		
 	}
+	
+////////////////////////////////////////////////////////SAIR_SALA///////////////////////////////////////////////////////////////////////////////////
+	public void sairSala(Usuario usuario, Sala sala) throws ClassNotFoundException, IOException{
+		negocios.sairSala(listaUsuarios, listaSalas, usuario, sala);
+		listaSalas = negocios.receberListaSalas();
+		listaUsuarios = negocios.receberListaUsuarios();
+		
+	}
+
+	
+///////////////////////////////////////////////////////////////MOSTRAR_LISTA_SALAS/////////////////////////////////////////////////////////////////////////
+	public ArrayList<Sala> mostrarListaSalas() throws ClassNotFoundException, IOException{
+		listaSalas = negocios.receberListaSalas();
+		return listaSalas;
+		
+	}
+	
+///////////////////////////////////////////////////////MOSTRAR_LISTA_USUARIOS////////////////////////////////////////////////////////////////////////
+	public ArrayList<Usuario> mostrarListaUsuarios() throws ClassNotFoundException, IOException{
+		listaUsuarios = negocios.receberListaUsuarios();
+		return listaUsuarios;
+		
+	}
+
+	
+//////////////////////////////////////////////////////////CONECTAR////////////////////////////////////////////////////////////////////////////////////
+	public void conectar() throws IOException{
+		negocios.conectarUsuario(ip2);
+	}
+	
+//////////////////////////////////////////////////////////DESCONECTAR////////////////////////////////////////////////////////////////////////////////////////	
+	public void desconectar() throws IOException{
+		negocios.desconectarUsuario(ip2, listaUsuarios);
+		
+		int i =0;
+		boolean achou = false;
+		while(!achou && i<listaUsuarios.size()){
+			 user = listaUsuarios.get(i); 
+			if(user.getIP().equals(ip2)){
+				listaUsuariosOnline.remove(user);
+			}else{
+				i++;
+			}
+		}
+		
+				
+	}
+	
+//////////////////////////////////////////////////////////ENVIAR_OBJETO/////////////////////////////////////////////////////////////////////////////////////
+	public void enviarObjeto(Object objeto) throws IOException{
+		negocios.enviarObjeto(objeto);
+	}
+	
+//////////////////////////////////////////////////////////RECEBER_OBJETO////////////////////////////////////////////////////////////////////////////////////
+    public Object receberObjeto() throws ClassNotFoundException, IOException{
+    	Object objeto = negocios.receberObjeto();
+    	return objeto;
+    }
+
 
 }
