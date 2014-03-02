@@ -1,6 +1,5 @@
 package Server;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -238,7 +237,9 @@ public class NegociosServidor {
 	}
 
 
-	void entrarSala() throws ClassNotFoundException, IOException{
+	InfoSala entrarSala() throws ClassNotFoundException, IOException{
+		comunicacao.enviar("entrarSala");
+		InfoSala retorno = null;
 		ArrayList<Sala> listaSalas = (ArrayList<Sala>) comunicacao.receber();
 		ArrayList<Usuario> listaUsuarios = (ArrayList<Usuario>) comunicacao.receber();
 		Usuario usuario  =  (Usuario) comunicacao.receber();
@@ -257,6 +258,7 @@ public class NegociosServidor {
 		for (int i = 0; i < listaSalas.size(); i++) {
 			Sala salaAux = listaSalas.get(i);
 			if(salaAux.getId()==sala.getId()){
+				retorno = new InfoSala(i, usuario, sala.getNome());
 				listaSalas.get(i).getListaUsuarios().add(usuario);
 				oosS.writeObject(sala);
 			}else{
@@ -277,13 +279,14 @@ public class NegociosServidor {
 		}
 
 		oosU.close();
-
+		return retorno;
 
 	}
 
 
 
 	void sairSala() throws ClassNotFoundException, IOException{
+		comunicacao.enviar("sairSala");
         ArrayList<Usuario> listaUsuarios = (ArrayList<Usuario>) comunicacao.receber();
 		ArrayList<Sala> listaSalas = (ArrayList<Sala>) comunicacao.receber();
 		Usuario usuario  =  (Usuario) comunicacao.receber();
@@ -376,8 +379,32 @@ public class NegociosServidor {
 			}
 		}
 		
-		
 		comunicacao.enviar(listaOnline);
 	}
 
+}
+
+class InfoSala {
+	int indiceSala;
+	Usuario usuario;
+	String nomeSala;
+	
+	public InfoSala(int indiceSala, Usuario usuario, String nomeSala){
+		this.indiceSala = indiceSala;
+		this.usuario = usuario;
+		this.nomeSala = nomeSala;
+	}
+
+	public int getIndiceSala() {
+		return indiceSala;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public String getNomeSala() {
+		return nomeSala;
+	}
+	
 }

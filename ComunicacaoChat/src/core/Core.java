@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,21 +45,17 @@ public class Core {
 	ObjectInputStream oisU;
 	FileInputStream fisS;
 	ObjectInputStream oisS;
+	Socket ip = new Socket();
+	String a = ip.getInetAddress().getHostAddress();
 
-
-
-	public Core(String IP) throws IOException {
+	public Core(String a) throws IOException {
 		this.listaSalas = new ArrayList<Sala>();
 		this.listaUsuarios = new ArrayList<Usuario>();
 		this.comunicacao = new TCPCliente(4035);
 		this.negocios = new NegociosCliente(this.comunicacao);
-		this.conectar(IP);
+		this.conectar(a);
 	}
 
-	public Core(){
-		
-	}
-	
 	public void conectar(String IP) throws IOException{
 		comunicacao.conectar(IP);
 	}
