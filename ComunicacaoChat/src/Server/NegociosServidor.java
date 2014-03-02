@@ -353,7 +353,7 @@ public class NegociosServidor {
 
 	}
 
-
+/*
 	void mostrarListaSalasUsuario() throws ClassNotFoundException, IOException{
 		Usuario user = (Usuario) comunicacao.receber();
 		ArrayList<Sala> lista = user.getSalasParticipa();
@@ -374,6 +374,7 @@ public class NegociosServidor {
 
 		comunicacao.enviar(listaOnline);
 	}
+	*/
 
 }
 

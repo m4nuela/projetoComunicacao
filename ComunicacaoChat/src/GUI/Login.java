@@ -37,8 +37,8 @@ public class Login extends JFrame {
 	private JTextField tf_login;
 	private JPasswordField tf_senha;
 	private static Socket socket = new Socket();
-	private static String a = socket.getInetAddress().getHostAddress();
-	private static Core core = new Core(a);
+	//private static String a = socket.getInetAddress().getHostAddress();
+	private static Core core = new Core("localhost");
 
 	/**
 	 * Launch the application.

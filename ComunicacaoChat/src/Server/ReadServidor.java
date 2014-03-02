@@ -60,6 +60,8 @@ public class ReadServidor extends Thread {
 					for (int i = 0; i < servidor.mudanca.length; i++) {
 						servidor.mudanca[i] = true;
 					}
+				} else if(recebida.equalsIgnoreCase("enviarMesagem")){
+					
 				}
 			} catch (ClassNotFoundException e){
 				e.printStackTrace();

@@ -21,6 +21,7 @@ public class NegociosCliente {
 
 
 	void criarSala(String nome, boolean protegida, String senha, Usuario dono) throws IOException{
+		comunicacao.enviar("criarSala");
 		comunicacao.enviar(nome);
 		comunicacao.enviar(protegida);
 		if(protegida){
@@ -33,6 +34,7 @@ public class NegociosCliente {
 	}
 
 	void cadastrarUsuario(String nome,String login, String senha,String email, JLabel avatar) throws LoginJaExistenteException, CampoObrigatorioException, IOException, FileNotFoundException, ClassNotFoundException{
+		comunicacao.enviar("cadastrarUsuario");
 		comunicacao.enviar(nome);
 		comunicacao.enviar(login);
 		comunicacao.enviar(senha);
@@ -41,6 +43,7 @@ public class NegociosCliente {
 	}
 
 	void entrarSala(ArrayList<Sala> listaSalas, ArrayList<Usuario> listaUsuarios, Usuario usuario, Sala sala) throws IOException{
+		comunicacao.enviar("entrarSala");
 		comunicacao.enviar(listaSalas);
 		comunicacao.enviar(listaUsuarios);
 		comunicacao.enviar(usuario);
@@ -48,6 +51,7 @@ public class NegociosCliente {
 	}
 
 	void sairSala(ArrayList<Usuario> listaUsuarios,ArrayList<Sala> listaSalas, Usuario usuario, Sala sala) throws IOException{
+		comunicacao.enviar("sairSala");
 		comunicacao.enviar(listaUsuarios);
 		comunicacao.enviar(listaSalas);
 		comunicacao.enviar(usuario);
@@ -56,6 +60,7 @@ public class NegociosCliente {
 	}
 
 	void enviarMensagem(String msg) throws IOException{
+		comunicacao.enviar("enviarMensagem");
 		comunicacao.enviar(msg);
 
 	}
@@ -67,14 +72,22 @@ public class NegociosCliente {
 	}
 
 	ArrayList<Sala> receberListaSalas() throws ClassNotFoundException, IOException{
-		ArrayList<Sala> listaSala = (ArrayList<Sala>)comunicacao.receber();
+		ArrayList<Sala> listaSala = (ArrayList<Sala>) comunicacao.receber();
 		return listaSala;
+	}
+	
+	
+	ArrayList<Usuario> receberListaUsuarios() throws ClassNotFoundException, IOException{
+		ArrayList<Usuario> listaUsuario = (ArrayList<Usuario>) comunicacao.receber();
+	return listaUsuario;
 	}
 
-	ArrayList<Sala> receberListaUsuariosOnline() throws ClassNotFoundException, IOException{
-		ArrayList<Sala> listaSala = (ArrayList<Sala>)comunicacao.receber();
-		return listaSala;
+	/*
+	ArrayList<Usuario> receberListaUsuariosOnline() throws ClassNotFoundException, IOException{
+		ArrayList<Usuario> listaUsuariosOnline = (ArrayList<Usuario>)comunicacao.receber();
+		return listaUsuariosOnline;
 	}
+	*/
 
 	Sala receberSala() throws ClassNotFoundException, IOException{
 		return (Sala) comunicacao.receber();
@@ -87,4 +100,39 @@ public class NegociosCliente {
 	void conectarUsuario(String ip) throws IOException{
 		comunicacao.conectar(ip);
 	}
+	
+	void enviarObjeto(Object obj ) throws IOException{
+		comunicacao.enviar("enviarObjeto");
+		comunicacao.enviar(obj);
+	}
+	
+	Object receberObjeto() throws ClassNotFoundException, IOException{
+		Object retorno = comunicacao.receber();
+		return retorno;
+		
+	}
+	
+	void atualizarUsuario(String nome,String login, String senha,String email, JLabel avatar) throws IOException{
+		comunicacao.enviar("atualizarUsuario");
+		comunicacao.enviar(nome);
+		comunicacao.enviar(login);
+		comunicacao.enviar(senha);
+		comunicacao.enviar(email);
+		comunicacao.enviar(avatar);
+	}
+	
+	 void atualizarSala(String nome, boolean protegida,String senha, String dono) throws IOException{
+		 comunicacao.enviar("atualizarSala");   
+		 comunicacao.enviar(nome);
+		 comunicacao.enviar(protegida);
+		 comunicacao.enviar(senha);
+		 comunicacao.enviar(dono);
+	}
+	 
+	 void fazerloginUsuario(String login, String senha) throws IOException{
+		 comunicacao.enviar("fazerLoginUsuario");
+		 comunicacao.enviar(login);
+		 comunicacao.enviar(senha);
+	 }
+	
 }

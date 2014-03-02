@@ -42,13 +42,15 @@ public class Core {
 	FileInputStream fisS;
 	ObjectInputStream oisS;
 
-
-
+	
+	
 	public Core(String a){
 		this.listaSalas = new ArrayList<Sala>();
 
 		this.listaUsuarios = new ArrayList<Usuario>();
 		this.comunicacao = new TCPCliente(4035);
+		
+		System.out.println("entrei no core");
 	}
 
 
