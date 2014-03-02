@@ -28,10 +28,8 @@ public class Core {
 	ArrayList<Usuario> listaUsuarios;
 	ArrayList<Usuario> listaUsuariosOnline;
 	CamadaTransporte comunicacao;
-	NegociosCliente negocios;
 	Usuario user = new Usuario(null, null, null, null, null);
 	Sala sala = new Sala(null, false, null, user);
-	String IP;
 	boolean existe;
 	boolean logado;
 	int i; 
@@ -46,26 +44,15 @@ public class Core {
 
 
 
-	public Core(String IP) throws IOException{
+	public Core(String a){
 		this.listaSalas = new ArrayList<Sala>();
+
 		this.listaUsuarios = new ArrayList<Usuario>();
 		this.comunicacao = new TCPCliente(4035);
-		this.negocios = new NegociosCliente(this.comunicacao);
-		this.conectar(IP);
 	}
 
 
-	
-	public void conectar(String IP) throws IOException{
-		comunicacao.conectar(IP);
-	}
-	
-	
-	
 	///////////////////////////////////INICIALIZAR_LISTAS//////////////////////////////////////////////////////////////////////////////////////////
-	
-	
-	
 	public void inicializarListas() throws IOException, FileNotFoundException, ClassNotFoundException{
 
 

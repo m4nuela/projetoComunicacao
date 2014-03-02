@@ -1,6 +1,5 @@
 package Server;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -46,6 +45,7 @@ public class NegociosServidor {
 		JLabel avatarUser = (JLabel) comunicacao.receber();
 		user = new Usuario (nomeUser, loginUser, senhaUser, emailUser, avatarUser);
 		user.setIP(((TCPServidor) comunicacao).getSocket().getInetAddress());
+		this.gravarArquivoUsuario(user);
 		return user;
 	}
 
@@ -75,14 +75,6 @@ public class NegociosServidor {
 			Usuario user = listaUsuario.get(i);
 			comunicacao.enviar(user);
 		}
-	}
-
-	void desconectarUsuario() throws IOException {
-		comunicacao.desconectar();
-	}
-
-	void conectarUsuario(String ip) throws IOException{
-		comunicacao.conectar(ip);
 	}
 
 	void enviarMensagem(String mensagem) throws IOException {
@@ -166,7 +158,7 @@ public class NegociosServidor {
 		oosS.close();
 	}
 
-	void gravarArquivoUsuario() throws IOException, ClassNotFoundException{
+	void gravarArquivoUsuario(Usuario user) throws IOException, ClassNotFoundException{
 		File file = new File("arquivosUsuario.txt");
 		FileOutputStream fosU = new FileOutputStream(file); 
 		ObjectOutputStream oosU = new ObjectOutputStream(fosU);
@@ -178,8 +170,7 @@ public class NegociosServidor {
 		}
 
 
-		Usuario usuario = (Usuario) comunicacao.receber();
-		oosU.writeObject(usuario);
+		oosU.writeObject(user);
 		oosU.close();
 	}
 
@@ -238,7 +229,8 @@ public class NegociosServidor {
 	}
 
 
-	void entrarSala() throws ClassNotFoundException, IOException{
+	InfoSala entrarSala() throws ClassNotFoundException, IOException{
+		InfoSala retorno = null;
 		ArrayList<Sala> listaSalas = (ArrayList<Sala>) comunicacao.receber();
 		ArrayList<Usuario> listaUsuarios = (ArrayList<Usuario>) comunicacao.receber();
 		Usuario usuario  =  (Usuario) comunicacao.receber();
@@ -257,6 +249,7 @@ public class NegociosServidor {
 		for (int i = 0; i < listaSalas.size(); i++) {
 			Sala salaAux = listaSalas.get(i);
 			if(salaAux.getId()==sala.getId()){
+				retorno = new InfoSala(i, usuario, sala.getNome());
 				listaSalas.get(i).getListaUsuarios().add(usuario);
 				oosS.writeObject(sala);
 			}else{
@@ -277,7 +270,7 @@ public class NegociosServidor {
 		}
 
 		oosU.close();
-
+		return retorno;
 
 	}
 
@@ -360,11 +353,12 @@ public class NegociosServidor {
 	
 	void mostrarListaSalasUsuario() throws ClassNotFoundException, IOException{
 		Usuario user = (Usuario) comunicacao.receber();
-		ArrayList lista = user.getSalasParticipa();
+		ArrayList<Sala> lista = user.getSalasParticipa();
 		comunicacao.enviar(lista);
 	}
 	
-		
+	
+	
 	void mostrarListaUsuariosOnline(ArrayList <Usuario> lista ) throws IOException{
 		ArrayList <Usuario> listaOnline = new ArrayList<Usuario>();
 		
@@ -375,10 +369,32 @@ public class NegociosServidor {
 			}
 		}
 		
-		
 		comunicacao.enviar(listaOnline);
 	}
 
+}
 
+class InfoSala {
+	int indiceSala;
+	Usuario usuario;
+	String nomeSala;
+	
+	public InfoSala(int indiceSala, Usuario usuario, String nomeSala){
+		this.indiceSala = indiceSala;
+		this.usuario = usuario;
+		this.nomeSala = nomeSala;
+	}
 
+	public int getIndiceSala() {
+		return indiceSala;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public String getNomeSala() {
+		return nomeSala;
+	}
+	
 }
