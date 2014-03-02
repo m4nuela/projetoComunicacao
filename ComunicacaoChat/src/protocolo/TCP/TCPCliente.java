@@ -17,7 +17,7 @@ public class TCPCliente implements CamadaTransporte {
 	}
 
 	public void conectar(String address) throws IOException {
-		this.socket = new Socket(address,port);
+		this.socket = new Socket(address, 5435);
 		socketOut = new ObjectOutputStream(this.socket.getOutputStream());
 		socketIn = new ObjectInputStream(this.socket.getInputStream());
 	}
@@ -28,7 +28,7 @@ public class TCPCliente implements CamadaTransporte {
 
 	
 	public void enviar(Object in) throws IOException {
-                socketOut.reset();
+       socketOut.reset();
 		socketOut.writeObject(in);
 	}
 

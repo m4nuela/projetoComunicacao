@@ -91,4 +91,6 @@ public class Sala implements Serializable{
 	public void setDono(Usuario dono) {
 		this.dono = dono;
 	}
+	
+	
 }

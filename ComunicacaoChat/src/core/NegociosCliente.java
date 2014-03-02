@@ -59,18 +59,18 @@ public class NegociosCliente {
 
 	}
 
-	void enviarMensagem(String msg) throws IOException{
-		comunicacao.enviar("enviarMensagem");
+	void enviarMensagem(String msg, Sala sala) throws IOException{
+		comunicacao.enviar("receberMensagem");
 		comunicacao.enviar(msg);
+		comunicacao.enviar(sala);
 
 	}
-
 
 	String receberMensagem() throws ClassNotFoundException, IOException{
 		String recebida = (String) comunicacao.receber();
 		return recebida;
 	}
-
+	
 	ArrayList<Sala> receberListaSalas() throws ClassNotFoundException, IOException{
 		ArrayList<Sala> listaSala = (ArrayList<Sala>) comunicacao.receber();
 		return listaSala;
@@ -82,16 +82,12 @@ public class NegociosCliente {
 	return listaUsuario;
 	}
 
-	/*
+	
 	ArrayList<Usuario> receberListaUsuariosOnline() throws ClassNotFoundException, IOException{
 		ArrayList<Usuario> listaUsuariosOnline = (ArrayList<Usuario>)comunicacao.receber();
 		return listaUsuariosOnline;
 	}
-	*/
-
-	Sala receberSala() throws ClassNotFoundException, IOException{
-		return (Sala) comunicacao.receber();
-	}
+	
 
 	void desconectarUsuario() throws IOException {
 		comunicacao.desconectar();
@@ -112,27 +108,28 @@ public class NegociosCliente {
 		
 	}
 	
-	void atualizarUsuario(String nome,String login, String senha,String email, JLabel avatar) throws IOException{
+	void atualizarUsuario(String nome,String login, String senha,String email, JLabel avatar, ArrayList<Usuario> lista) throws IOException{
 		comunicacao.enviar("atualizarUsuario");
 		comunicacao.enviar(nome);
 		comunicacao.enviar(login);
 		comunicacao.enviar(senha);
 		comunicacao.enviar(email);
 		comunicacao.enviar(avatar);
+		comunicacao.enviar(lista);
 	}
 	
-	 void atualizarSala(String nome, boolean protegida,String senha, String dono) throws IOException{
+	 void atualizarSala(String nome, boolean protegida,String senha) throws IOException{
 		 comunicacao.enviar("atualizarSala");   
 		 comunicacao.enviar(nome);
 		 comunicacao.enviar(protegida);
 		 comunicacao.enviar(senha);
-		 comunicacao.enviar(dono);
 	}
 	 
-	 void fazerloginUsuario(String login, String senha) throws IOException{
+	 void fazerloginUsuario(String login, String senha, ArrayList<Usuario> listaUsuarios) throws IOException{
 		 comunicacao.enviar("fazerLoginUsuario");
 		 comunicacao.enviar(login);
 		 comunicacao.enviar(senha);
+		 comunicacao.enviar(listaUsuarios);
 	 }
-	
+	 
 }

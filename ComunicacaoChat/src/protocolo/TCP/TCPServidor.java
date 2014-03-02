@@ -4,7 +4,9 @@ import entidades.Sala;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.channels.AcceptPendingException;
 
 
 public class TCPServidor implements CamadaTransporte {
@@ -12,6 +14,7 @@ public class TCPServidor implements CamadaTransporte {
 	int port;
 	ObjectOutputStream socketOut;
 	ObjectInputStream socketIn;
+	ServerSocket entrada;
 
 	public TCPServidor(Socket socket) throws IOException{
 		this.socket = socket;
@@ -20,7 +23,8 @@ public class TCPServidor implements CamadaTransporte {
 	}
 
 	public void conectar(String address) throws IOException {
-		System.out.println("isso eh usado?");
+		entrada = new ServerSocket(2000);
+		Socket sock = entrada.accept();
 	}
 
 	public void desconectar() throws IOException {
