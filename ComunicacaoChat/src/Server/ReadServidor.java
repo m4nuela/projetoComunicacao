@@ -44,7 +44,7 @@ public class ReadServidor extends Thread {
 					InfoSala info = negocios.entrarSala();
 					modificarSalas(info);
 					for (int i = 0; i < servidor.mudanca.length; i++) {
-						if(servidor.threads[i] != null)){
+						if(servidor.threads[i] != null){
 							//sinalizando thread
 							servidor.mudanca[i] = true;
 						}
@@ -60,9 +60,6 @@ public class ReadServidor extends Thread {
 					for (int i = 0; i < servidor.mudanca.length; i++) {
 						servidor.mudanca[i] = true;
 					}
-
-				} else if(recebida.equalsIgnoreCase("enviarMensagem")){
-					servidor.comunicacao.enviar();
 				}
 			} catch (ClassNotFoundException e){
 				e.printStackTrace();

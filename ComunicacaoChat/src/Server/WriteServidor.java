@@ -13,7 +13,7 @@ public class WriteServidor extends Thread {
 	Condition cv;
 	
 	
-	public WriteServidor(Server servidor, int indice, Lock lock, Condition cv, NegociosServidor negocios){
+	public WriteServidor(Server servidor, int indice, Lock lock, Condition cv, int indice2, NegociosServidor negocios){
 		this.negocios = negocios;
 		this.servidor = servidor;
 		this.indice = indice;

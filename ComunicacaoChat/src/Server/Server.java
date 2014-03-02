@@ -5,6 +5,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.concurrent.locks.*;
 import protocolo.TCP.CamadaTransporte;
+import protocolo.TCP.TCPServidor;
 import protocolo.UDP.Pacote;
 import protocolo.UDP.UDPServidor;
 import entidades.*;
@@ -22,8 +23,9 @@ public class Server implements Runnable {
 	//MetodosBP bp;
 	DatagramSocket serverSocket;
 	private InetAddress ipCliente;
-	private int portaEnvio;
-	int limiar;
+	private int portaEnvio; // usado no UDP
+	int limiar; // usado no UDP
+	Socket socket; // usado no TCP
 
 
 	public Server (int port, int maxClients, int limiar) throws SocketException {
@@ -35,7 +37,8 @@ public class Server implements Runnable {
 		serverSocket = new DatagramSocket(port);
 		//bp = new MetodosBP();
 		mudanca = new boolean [maxClients];
-		this.limiar = limiar;
+		this.limiar = limiar; // usado no UDP
+		this.socket = new Socket(); // usado no TCP
 	}
 
 	@Override
@@ -44,7 +47,8 @@ public class Server implements Runnable {
 		while(true){
 			try{
 				this.conectar();
-				comunicacao = new UDPServidor(portaEnvio, ipCliente, limiar);
+				//comunicacao = new UDPServidor(portaEnvio, ipCliente, limiar); // usado no UDP
+				comunicacao = new TCPServidor(socket);
 				comunicacao.conectar("localhost");
 				//System.out.println("conectou");
 				for (int i = 0; i < maxClients; i++) {

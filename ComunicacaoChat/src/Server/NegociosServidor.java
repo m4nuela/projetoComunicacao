@@ -54,29 +54,32 @@ public class NegociosServidor {
 		comunicacao.enviar(sala);
 	}
 
-	void enviarListaSalas(ArrayList<Sala> listaSalas) throws IOException {
-		comunicacao.enviar("enviarListaSalas");
-		for (int i = 0; i < listaSalas.size(); i++) {
-			Sala sala = listaSalas.get(i);
-			comunicacao.enviar(sala);
-		}
-	}
+	
+	 	void enviarListaSalas(ArrayList<Sala> listaSalas) throws IOException {
+			comunicacao.enviar("enviarListaSalas");
+	 		for (int i = 0; i < listaSalas.size(); i++) {
+	 			Sala sala = listaSalas.get(i);
+	 			comunicacao.enviar(sala);
+	 		}
+	 	}
 
-
+	 
 
 	void enviarUsuario(Usuario user) throws IOException {
 		comunicacao.enviar("enviarUsuario");
 		comunicacao.enviar(user);
 	}
 
-	void enviarListaUsuario(ArrayList<Usuario> listaUsuario) throws IOException {
-		comunicacao.enviar("enviarListaUsuarios");
-		for (int i = 0; i < listaUsuario.size(); i++) {
-			Usuario user = listaUsuario.get(i);
-			comunicacao.enviar(user);
-		}
-	}
-
+	/**
+	 *	void enviarListaUsuario(ArrayList<Usuario> listaUsuario) throws IOException {
+	 *		comunicacao.enviar("enviarListaUsuarios");
+	 *		for (int i = 0; i < listaUsuario.size(); i++) {
+	 *			Usuario user = listaUsuario.get(i);
+	 *			comunicacao.enviar(user);
+	 *		}
+	 *	}
+	 **/
+	
 	void enviarMensagem(String mensagem) throws IOException {
 		comunicacao.enviar("enviarMensagem");
 		comunicacao.enviar(mensagem);
@@ -277,7 +280,7 @@ public class NegociosServidor {
 
 
 	void sairSala() throws ClassNotFoundException, IOException{
-        ArrayList<Usuario> listaUsuarios = (ArrayList<Usuario>) comunicacao.receber();
+		ArrayList<Usuario> listaUsuarios = (ArrayList<Usuario>) comunicacao.receber();
 		ArrayList<Sala> listaSalas = (ArrayList<Sala>) comunicacao.receber();
 		Usuario usuario  =  (Usuario) comunicacao.receber();
 		Sala sala = (Sala) comunicacao.receber();
@@ -285,7 +288,7 @@ public class NegociosServidor {
 		File file = new File("arquivosSalas.txt");
 		FileOutputStream fosS = new FileOutputStream(file); 
 		ObjectOutputStream oosS = new ObjectOutputStream(fosS);
-		
+
 		File fileU = new File("arquivosUsuarios.txt");
 		FileOutputStream fosU = new FileOutputStream(fileU); 
 		ObjectOutputStream oosU = new ObjectOutputStream(fosU);
@@ -300,8 +303,8 @@ public class NegociosServidor {
 		}
 
 		oosS.close();
-		
-		
+
+
 		for (int i = 0; i < listaUsuarios.size(); i++) {
 			Usuario usuarioAux = listaUsuarios.get(i);
 			if(usuarioAux==usuario){
@@ -349,26 +352,26 @@ public class NegociosServidor {
 		}
 
 	}
-	
-	
+
+
 	void mostrarListaSalasUsuario() throws ClassNotFoundException, IOException{
 		Usuario user = (Usuario) comunicacao.receber();
 		ArrayList<Sala> lista = user.getSalasParticipa();
 		comunicacao.enviar(lista);
 	}
-	
-	
-	
+
+
+
 	void mostrarListaUsuariosOnline(ArrayList <Usuario> lista ) throws IOException{
 		ArrayList <Usuario> listaOnline = new ArrayList<Usuario>();
-		
+
 		for(int i=0;i<lista.size(); i++){
 			Usuario userAux = lista.get(i);
 			if(userAux.getStatus()==true){
 				listaOnline.add(userAux);
 			}
 		}
-		
+
 		comunicacao.enviar(listaOnline);
 	}
 
@@ -378,7 +381,7 @@ class InfoSala {
 	int indiceSala;
 	Usuario usuario;
 	String nomeSala;
-	
+
 	public InfoSala(int indiceSala, Usuario usuario, String nomeSala){
 		this.indiceSala = indiceSala;
 		this.usuario = usuario;
@@ -396,5 +399,5 @@ class InfoSala {
 	public String getNomeSala() {
 		return nomeSala;
 	}
-	
+
 }
