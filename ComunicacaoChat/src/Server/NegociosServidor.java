@@ -364,8 +364,7 @@ public class NegociosServidor {
 		comunicacao.enviar(lista);
 	}
 	
-	
-	
+		
 	void mostrarListaUsuariosOnline(ArrayList <Usuario> lista ) throws IOException{
 		ArrayList <Usuario> listaOnline = new ArrayList<Usuario>();
 		
