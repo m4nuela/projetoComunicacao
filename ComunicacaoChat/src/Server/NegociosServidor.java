@@ -45,6 +45,7 @@ public class NegociosServidor {
 		JLabel avatarUser = (JLabel) comunicacao.receber();
 		user = new Usuario (nomeUser, loginUser, senhaUser, emailUser, avatarUser);
 		user.setIP(((TCPServidor) comunicacao).getSocket().getInetAddress());
+		this.gravarArquivoUsuario(user);
 		return user;
 	}
 
@@ -74,14 +75,6 @@ public class NegociosServidor {
 			Usuario user = listaUsuario.get(i);
 			comunicacao.enviar(user);
 		}
-	}
-
-	void desconectarUsuario() throws IOException {
-		comunicacao.desconectar();
-	}
-
-	void conectarUsuario(String ip) throws IOException{
-		comunicacao.conectar(ip);
 	}
 
 	void enviarMensagem(String mensagem) throws IOException {
@@ -165,7 +158,7 @@ public class NegociosServidor {
 		oosS.close();
 	}
 
-	void gravarArquivoUsuario() throws IOException, ClassNotFoundException{
+	void gravarArquivoUsuario(Usuario user) throws IOException, ClassNotFoundException{
 		File file = new File("arquivosUsuario.txt");
 		FileOutputStream fosU = new FileOutputStream(file); 
 		ObjectOutputStream oosU = new ObjectOutputStream(fosU);
@@ -177,8 +170,7 @@ public class NegociosServidor {
 		}
 
 
-		Usuario usuario = (Usuario) comunicacao.receber();
-		oosU.writeObject(usuario);
+		oosU.writeObject(user);
 		oosU.close();
 	}
 
@@ -238,7 +230,6 @@ public class NegociosServidor {
 
 
 	InfoSala entrarSala() throws ClassNotFoundException, IOException{
-		comunicacao.enviar("entrarSala");
 		InfoSala retorno = null;
 		ArrayList<Sala> listaSalas = (ArrayList<Sala>) comunicacao.receber();
 		ArrayList<Usuario> listaUsuarios = (ArrayList<Usuario>) comunicacao.receber();
@@ -286,7 +277,6 @@ public class NegociosServidor {
 
 
 	void sairSala() throws ClassNotFoundException, IOException{
-		comunicacao.enviar("sairSala");
         ArrayList<Usuario> listaUsuarios = (ArrayList<Usuario>) comunicacao.receber();
 		ArrayList<Sala> listaSalas = (ArrayList<Sala>) comunicacao.receber();
 		Usuario usuario  =  (Usuario) comunicacao.receber();
@@ -363,7 +353,7 @@ public class NegociosServidor {
 	
 	void mostrarListaSalasUsuario() throws ClassNotFoundException, IOException{
 		Usuario user = (Usuario) comunicacao.receber();
-		ArrayList lista = user.getSalasParticipa();
+		ArrayList<Sala> lista = user.getSalasParticipa();
 		comunicacao.enviar(lista);
 	}
 	

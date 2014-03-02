@@ -7,8 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,10 +28,8 @@ public class Core {
 	ArrayList<Usuario> listaUsuarios;
 	ArrayList<Usuario> listaUsuariosOnline;
 	CamadaTransporte comunicacao;
-	NegociosCliente negocios;
 	Usuario user = new Usuario(null, null, null, null, null);
 	Sala sala = new Sala(null, false, null, user);
-	String IP;
 	boolean existe;
 	boolean logado;
 	int i; 
@@ -45,27 +41,18 @@ public class Core {
 	ObjectInputStream oisU;
 	FileInputStream fisS;
 	ObjectInputStream oisS;
-	Socket ip = new Socket();
-	String a = ip.getInetAddress().getHostAddress();
 
-	public Core(String a) throws IOException {
+
+
+	public Core(String a){
 		this.listaSalas = new ArrayList<Sala>();
+
 		this.listaUsuarios = new ArrayList<Usuario>();
 		this.comunicacao = new TCPCliente(4035);
-		this.negocios = new NegociosCliente(this.comunicacao);
-		this.conectar(a);
 	}
 
-	public void conectar(String IP) throws IOException{
-		comunicacao.conectar(IP);
-	}
-	
-	
-	
+
 	///////////////////////////////////INICIALIZAR_LISTAS//////////////////////////////////////////////////////////////////////////////////////////
-	
-	
-	
 	public void inicializarListas() throws IOException, FileNotFoundException, ClassNotFoundException{
 
 
