@@ -380,6 +380,4 @@ public class NegociosServidor {
 		comunicacao.enviar(listaOnline);
 	}
 
-
-
 }

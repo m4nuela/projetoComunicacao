@@ -46,7 +46,7 @@ public class Core {
 
 
 
-	public Core(String IP) throws IOException{
+	public Core(String IP) throws IOException {
 		this.listaSalas = new ArrayList<Sala>();
 		this.listaUsuarios = new ArrayList<Usuario>();
 		this.comunicacao = new TCPCliente(4035);
@@ -54,7 +54,9 @@ public class Core {
 		this.conectar(IP);
 	}
 
-
+	public Core(){
+		
+	}
 	
 	public void conectar(String IP) throws IOException{
 		comunicacao.conectar(IP);
