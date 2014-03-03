@@ -37,20 +37,23 @@ public class Login extends JFrame {
 	private JTextField tf_login;
 	private JPasswordField tf_senha;
 	private static Socket socket = new Socket();
+	
 	//private static String a = socket.getInetAddress().getHostAddress();
-	private static Core core = new Core("localhost");
+	private static Core core;
 
-	/**
+	/**S
 	 * Launch the application.
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ClassNotFoundException, IOException {
+		core = new Core();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-
+     
 					Login frame = new Login();
 					frame.setVisible(true);
-					core.inicializarListas();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -98,11 +101,11 @@ public class Login extends JFrame {
 		btn_entrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				try {
 
-					System.out.println(tf_login.getText());
-					System.out.println( tf_senha.getText());
+				System.out.println(tf_login.getText());
+				System.out.println( tf_senha.getText());
 
+				try{
 					core.fazerLoginUsuario(tf_login.getText(), tf_senha.getText());
 					System.out.println("login realizado !");
 				} catch (CampoObrigatorioException e1) {
@@ -114,6 +117,9 @@ public class Login extends JFrame {
 				} catch (UsuarioInexistenteException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 					//e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 
 
